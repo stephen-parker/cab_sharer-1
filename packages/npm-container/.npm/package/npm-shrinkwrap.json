@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "fb": {
+      "version": "0.7.0",
+      "dependencies": {
+        "request": {
+          "version": "2.9.203"
+        },
+        "crypto": {
+          "version": "0.0.3"
+        }
+      }
+    }
+  }
+}

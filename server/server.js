@@ -11,6 +11,39 @@
 
 // getGeocode("Cyberport, Hong Kong");
 
+$FB = function () {
+    if (Meteor.isClient) {
+        throw new Meteor.Error(500, "Cannot run on client.");
+    }
+
+    var args = Array.prototype.slice.call(arguments);
+    if (args.length === 0) {
+        return;
+    }
+    var path = args[0];
+    var i = 1;
+    // Concatenate strings together in args
+    while (_.isString(args[i])) {
+        path = path + "/" + args[i];
+        i++;
+    }
+
+    if (_.isUndefined(path)) {
+        throw new Meteor.Error(500, 'No Facebook API path provided.');
+    }
+    var FB = Meteor.npmRequire('fb');
+
+    var fbResponse = Meteor.sync(function (done) {
+        FB.napi.apply(FB, [path].concat(args.splice(i)).concat([done]));
+    });
+
+    if (fbResponse.error !== null) {
+        console.error(fbResponse.error.stack);
+        throw new Meteor.Error(500, "Facebook API error.", {error: fbResponse.error, request: args});
+    }
+
+    return fbResponse.result;
+};
 
 
 
